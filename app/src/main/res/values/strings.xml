@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Cred_R_Android_Assignment</string>
     <string name="app_header">Snap Deal Search</string>
+    <string name="test_search_string">Headphones</string>
 </resources>

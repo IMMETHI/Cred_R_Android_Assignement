@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        loader=new ProgressDialog(this);
+        loader = new ProgressDialog(this);
         loader.setMessage("Fetching Data....");
         loader.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         loader.setCancelable(false);
@@ -82,10 +83,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
-        String url = CreateUrl(query);
-        JsoupAsyncTask jsoupAsyncTask = new JsoupAsyncTask();
-        jsoupAsyncTask.execute(url);
+    public boolean onQueryTextSubmit(final String query) {
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                String url = CreateUrl(query);
+                JsoupAsyncTask jsoupAsyncTask = new JsoupAsyncTask();
+                jsoupAsyncTask.execute(url);
+            }
+        });
         return false;
     }
 
@@ -103,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         @Override
         protected void onPreExecute() {
-            if(!isFinishing()){
+            if (!isFinishing()) {
                 loader.show();
             }
         }
@@ -129,8 +134,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         @Override
         protected void onPostExecute(List<Item> itemList) {
-            if(!isFinishing()){
-                if(loader.isShowing()){
+            if (!isFinishing()) {
+                if (loader.isShowing()) {
                     loader.cancel();
                 }
             }
